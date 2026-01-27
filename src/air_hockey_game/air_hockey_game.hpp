@@ -1,20 +1,5 @@
 #pragma once
 
-/**
- * @file air_hockey_game.hpp
- * @brief Air hockey table model and puck-wall bounce prediction.
- *
- * This module provides a simple air hockey table model and a method to compute the
- * first N wall-contact points of a puck given an initial position and hit angle.
- *
- * Coordinate conventions:
- * - 2D Cartesian table coordinates in the XY plane.
- * - Origin (0,0) is the bottom-left corner of the table.
- * - Table spans x in [0, length], y in [0, width].
- * - Angle is provided in degrees, measured CCW from +x:
- *   0° = +x (right), 90° = +y (up), 180° = -x (left), 270° = -y (down).
- */
-
 #include <array>
 
 #include "geometry/point.hpp"
@@ -28,11 +13,38 @@ using Vector3D = simple_slice::geometry::Vector3D;
 constexpr double kEpsilon = simple_slice::geometry::kEpsilon;
 
 /**
- * @brief Air hockey table and bounce simulation (ideal reflections)
+ * @brief Air hockey table and puck-table contact simulation w/ ideal reflections
  *
- * The table is modeled as an axis-aligned rectangle [0,length]×[0,width].
- * The puck is assumed to move in straight lines at constant speed and reflect
- * elastically off the walls (mirror reflection). No friction/spin/energy loss.
+ * This class provides a simple air hockey table model and a method to compute the
+ * first N wall-contact points of a puck given an initial position and hit angle.
+ *
+ * Coordinate conventions:
+ * - 2D Cartesian table coordinates in the XY plane.
+ * - Origin (0,0) is the bottom-left corner of the table.
+ * - Table spans x in [0, length], y in [0, width].
+ * - Angle is provided in degrees, measured CCW from +x:
+ *   0° = +x (right), 90° = +y (up), 180° = -x (left), 270° = -y (down).
+ *
+ * Coordinate system (top view):
+ *
+ *     y ↑
+ *       (0, W)                (L, W)
+ *       +--------------------+
+ *       |                    |
+ *       |   θ (ccw from +x)  |
+ *       |    ↗               |
+ *       |   • P(x,y)         |
+ *       |                    |
+ *       +--------------------+
+ *      (0,0)                 (L, 0)    --> x
+ *
+ * ASSUMPTIONS:
+ *
+ * - The table is modeled as an axis-aligned rectangle [0, length] x [0, width].
+ * - The puck is assumed to move in straight lines at CONSTANT speed (i.e. no acceleration) and
+ *   reflect elastically off the walls (i.e. mirror reflection).
+ * - We are assuming the magnitude of velocity/speed is 1 unit/second here.
+ * - No friction/spin or any other energy loss in the system.
  */
 class AirHockey {
 public:
@@ -60,44 +72,42 @@ public:
      */
     std::array<Point, 10> puck_hit_locations(const Point& initial_position, double angle_deg) const;
 
-private:
-    /// Convert a 2D Point to a 3D vector in the XY plane (z=0)
-    static Vector3D ToPositionVector(const Point& p);
+    /**
+     * @brief Print the table as an ASCII schematic
+     *
+     * @param hits Array of hit points
+     * @param cols Number of columns
+     * @param rows Number of rows
+     */
+    void PrintTable(const std::array<Point, 10>& hits, int cols = 60, int rows = 20) const;
 
-    /// Convert a 3D vector in the XY plane (z ignored) to a 2D Point
-    static Point ToPoint(const Vector3D& v);
+private:
+    double length_;  ///< length of table
+    double width_;   ///< width of table
 
     /**
-     * @brief Convert an angle in degrees to a direction vector in the XY plane
+     * @brief Converts an angle in degrees to a direction vector
      *
-     * @param angle_deg Angle in degrees (CCW from +x).
-     * @return A direction vector (not necessarily normalized beyond trig identity; z=0).
+     * @param angle Angle in degrees (CCW from +x)
+     * @return A direction vector
      */
-    static Vector3D DirectionVector(double angle_deg);
+    static Vector3D DirectionVector(double angle);
 
     /// Clamp a position to the table bounds to counter floating-point drift
     Vector3D ClampToTable(const Vector3D& position) const;
 
     /**
-     * @brief Compute time parameter to the next vertical wall hit.
+     * @brief Computes the forward time parameter t to the next wall along one axis.
      *
-     * @param x Current x position
-     * @param dx x component of direction
-     * @return Smallest positive t such that x + dx*t is 0 or length; or +inf if none.
+     * @param position Current position (x or y)
+     * @param velocity Velocity component along that axis
+     * @param min_bound Minimum bound
+     * @param max_bound Maximum bound
+     * @return Smallest positive t such that (position + direction * t) is at the wall; or +inf if
+     * none
      */
-    double TimeToVerticalWall(double x, double dx) const;
-
-    /**
-     * @brief Compute time parameter to the next horizontal wall hit.
-     *
-     * @param y Current y position
-     * @param dy y component of direction
-     * @return Smallest positive t such that y + dy*t is 0 or width; or +inf if none.
-     */
-    double TimeToHorizontalWall(double y, double dy) const;
-
-    double length_;  ///< Table length (x extent), > 0
-    double width_;   ///< Table width  (y extent), > 0
+    double TimeToNextWall(double position, double velocity, double min_bound, double max_bound)
+        const;
 };
 
 }  // namespace simple_slice::air_hockey_game
