@@ -22,5 +22,5 @@ target_link_libraries(air_hockey_game PRIVATE simple_slice::geometry)
 # Tests
 include(CTest)
 if(BUILD_TESTING)
-    add_subdirectory(test)
+    add_subdirectory(tests)
 endif()
