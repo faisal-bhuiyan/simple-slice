@@ -11,13 +11,15 @@ FetchContent_MakeAvailable(googletest)
 
 # One executable for all unit tests
 add_executable(unit_tests
-    test_vector.cpp
-    test_utilities.cpp
-    test_projections.cpp
+    geometry/test_vector.cpp
+    geometry/test_utilities.cpp
+    geometry/test_projections.cpp
+    air_hockey_game/test_air_hockey_game.cpp
 )
 
 target_link_libraries(unit_tests PRIVATE
     simple_slice::geometry
+    air_hockey_game_lib
     GTest::gtest_main
 )
 

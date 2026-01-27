@@ -13,6 +13,14 @@ target_include_directories(simpleslice_geometry INTERFACE
 )
 add_library(simple_slice::geometry ALIAS simpleslice_geometry)
 
+# Air hockey game library target
+add_library(air_hockey_game_lib
+    src/air_hockey_game/air_hockey_game.cpp
+)
+target_include_directories(air_hockey_game_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(air_hockey_game_lib PUBLIC simple_slice::geometry)
+add_library(simple_slice::air_hockey_game ALIAS air_hockey_game_lib)
+
 # Executables
 add_executable(air_hockey_game
     src/air_hockey_game/air_hockey_game_main.cpp

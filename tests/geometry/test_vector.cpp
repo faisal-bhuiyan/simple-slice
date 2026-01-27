@@ -18,9 +18,9 @@ protected:
     }
 };
 
-// ----------------------------------------------
+//----------------------------------------------
 // Constructor Tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(VectorTest, ConstructorWithDefaultZ) {
     Vector3D v{1., 2.};
@@ -38,9 +38,9 @@ TEST_F(VectorTest, ConstructorExplicit3D) {
     EXPECT_DOUBLE_EQ(v.z, 3.);
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // Addition Tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(VectorTest, AdditionBasic) {
     Vector3D v1{1., 2., 3.};
@@ -75,9 +75,9 @@ TEST_F(VectorTest, AdditionIsAssociative) {
     ExpectVectorNear((v1 + v2) + v3, v1 + (v2 + v3));
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // Subtraction Tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(VectorTest, SubtractionBasic) {
     Vector3D v1{4., 5., 6.};
@@ -105,9 +105,9 @@ TEST_F(VectorTest, SubtractionNegation) {
     ExpectVectorNear(result, Vector3D{-1., -2., -3.});
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // Scalar Multiplication Tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(VectorTest, ScalarMultiplicationVectorTimesScalar) {
     Vector3D v{1., 2., 3.};
@@ -165,9 +165,9 @@ TEST_F(VectorTest, ScalarMultiplicationDistributive) {
     ExpectVectorNear(s * (v1 + v2), (s * v1) + (s * v2));
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // Dot Product Tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(VectorTest, DotProductOrthogonalVectors) {
     Vector3D v1{1., 0., 0.};
@@ -180,7 +180,7 @@ TEST_F(VectorTest, DotProductOrthogonalVectors) {
 
 TEST_F(VectorTest, DotProductParallelVectors) {
     Vector3D v1{1., 2., 3.};
-    Vector3D v2{2., 4., 6.};  // v2 = 2 * v1
+    Vector3D v2{2., 4., 6.};
 
     double result = dot_product(v1, v2);
 
@@ -212,7 +212,7 @@ TEST_F(VectorTest, DotProductWithSelf) {
 }
 
 TEST_F(VectorTest, DotProduct2DVectors) {
-    Vector3D v1{3., 4.};  // z defaults to 0
+    Vector3D v1{3., 4.};
     Vector3D v2{1., 2.};
 
     double result = dot_product(v1, v2);
@@ -220,9 +220,9 @@ TEST_F(VectorTest, DotProduct2DVectors) {
     EXPECT_NEAR(result, 11., kEpsilon);  // 3 + 8
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // Cross Product Tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(VectorTest, CrossProductUnitVectorsIxJ) {
     Vector3D i{1., 0., 0.};
@@ -292,9 +292,9 @@ TEST_F(VectorTest, CrossProductWithSelfIsZero) {
     ExpectVectorNear(result, Vector3D{0., 0., 0.});
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // Magnitude Tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(VectorTest, MagnitudeUnitVectorX) {
     Vector3D i{1., 0., 0.};
@@ -345,9 +345,9 @@ TEST_F(VectorTest, MagnitudeArbitraryVector) {
     EXPECT_NEAR(magnitude(v), 7., kEpsilon);
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // Distance Tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(VectorTest, DistanceBetweenSamePoint) {
     Vector3D v{1., 2., 3.};

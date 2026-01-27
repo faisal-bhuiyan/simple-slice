@@ -13,9 +13,9 @@ protected:
     static constexpr double kTestEpsilon = 1e-9;
 };
 
-// ----------------------------------------------
+//----------------------------------------------
 // sign() function tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(UtilitiesTest, SignPositiveValue) {
     EXPECT_EQ(sign(1.), 1);
@@ -91,9 +91,9 @@ TEST_F(UtilitiesTest, SignSymmetry) {
     }
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // clamp_to_unit_interval() function tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(UtilitiesTest, ClampValueWithinRange) {
     EXPECT_DOUBLE_EQ(clamp_to_unit_interval(0.), 0.);
@@ -160,9 +160,9 @@ TEST_F(UtilitiesTest, ClampManyValues) {
     }
 }
 
-// ----------------------------------------------
+//----------------------------------------------
 // Constants tests
-// ----------------------------------------------
+//----------------------------------------------
 
 TEST_F(UtilitiesTest, EpsilonValue) {
     EXPECT_DOUBLE_EQ(kEpsilon, 1e-9);
