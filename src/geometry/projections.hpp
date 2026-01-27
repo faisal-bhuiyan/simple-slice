@@ -148,8 +148,7 @@ inline bool contains_point_2d(const AxisAlignedBoundingBox2D& box, const Vector3
 }
 
 /**
- * @brief Test whether point @p lies on the closed line segment [a,b] in 2D (XY
- * plane).
+ * @brief Test whether a point lies on the closed line segment [a,b] in 2D (XY plane)
  *
  * The test has two parts:
  * 1) **Collinearity**: `orient2D(a,b,p)` must be ~0 (within `kEpsilon`), meaning a, b, and p lie on
@@ -157,9 +156,9 @@ inline bool contains_point_2d(const AxisAlignedBoundingBox2D& box, const Vector3
  * 2) **Bounding box**: p's x and y coordinates must lie within the axis-aligned bounding box of a
  * and b (expanded by `kEpsilon` to tolerate floating error).
  *
- * @param a Segment start (uses a.x,a.y)
- * @param b Segment end   (uses b.x,b.y)
- * @param p Query point   (uses p.x,p.y)
+ * @param vector_1 Segment start
+ * @param vector_2 Segment end
+ * @param point Query point
  * @return true if p is on the segment [a,b] (including endpoints), false
  * otherwise.
  *
