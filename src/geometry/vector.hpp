@@ -5,10 +5,12 @@
 namespace simple_slice::geometry {
 
 /**
- * @brief A 3D vector in Cartesian coordinates
+ * @brief A 3D vector in Cartesian coordinates.
  *
- * Stores x, y, z components and provides basic vector arithmetic operations.
- * This struct is used for both 3D geometry and 2D operations (setting z=0).
+ * Stores x, y, z components and provides basic vector arithmetic.
+ * For 2D usage, callers should set z = 0 and interpret results in the XY plane.
+ *
+ * @note This type is a plain data container; no normalization or bounds checks are performed.
  */
 struct Vector3D {
     double x, y, z;  ///< Cartesian coordinates (x, y, z)
@@ -22,7 +24,7 @@ struct Vector3D {
     Vector3D(double x, double y, double z = 0.) : x(x), y(y), z(z) {}
 
     /**
-     * @brief Vector addition
+     * @brief Adds two vectors
      * @param other Vector to add
      * @return Component-wise sum of this vector and other
      */
@@ -31,7 +33,7 @@ struct Vector3D {
     }
 
     /**
-     * @brief Vector subtraction
+     * @brief Subtracts two vectors
      * @param other Vector to subtract
      * @return Component-wise difference of this vector and other
      */
@@ -40,7 +42,7 @@ struct Vector3D {
     }
 
     /**
-     * @brief Scalar multiplication
+     * @brief Multiplies a vector by a scalar
      * @param s Scalar multiplier
      * @return Vector with each component multiplied by s
      */
@@ -48,7 +50,7 @@ struct Vector3D {
 };
 
 /**
- * @brief Scalar multiplication (scalar * vector).
+ * @brief Multiplies a vector by a scalar (scalar * vector)
  * @param s Scalar multiplier
  * @param v Vector to multiply
  * @return Vector with each component multiplied by s
@@ -59,21 +61,18 @@ inline Vector3D operator*(double s, const Vector3D& v) {
 }
 
 /**
- * @brief Compute the dot product (scalar product) of two vectors
+ * @brief Computes the dot product (scalar product) of two vectors
  *
- * @param v_1 First vector
- * @param v_2 Second vector
- * @return Dot product: v_1 · v_2 = v_1.x*v_2.x + v_1.y*v_2.y + v_1.z*v_2.z
- *
- * @note The dot product measures the projection of one vector onto another.
- *       When vectors are normalized, result ∈ [-1,1] represents cos(angle).
+ * @param v1 First vector
+ * @param v2 Second vector
+ * @return Dot product: v1 · v2 = v1.x*v2.x + v1.y*v2.y + v1.z*v2.z
  */
-inline double dot_product(const Vector3D& v_1, const Vector3D& v_2) {
-    return v_1.x * v_2.x + v_1.y * v_2.y + v_1.z * v_2.z;
+inline double dot_product(const Vector3D& v1, const Vector3D& v2) {
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
 /**
- * @brief Compute the cross product (vector product) of two vectors
+ * @brief Computes the cross product (vector product) of two vectors
  *
  * @param v1 First vector
  * @param v2 Second vector
@@ -92,7 +91,7 @@ inline Vector3D cross_product(const Vector3D& v1, const Vector3D& v2) {
 }
 
 /**
- * @brief Compute the Euclidean magnitude (length) of a vector
+ * @brief Computes the Euclidean magnitude (length) of a vector
  *
  * @param v Vector to measure
  * @return ||v|| = sqrt(v.x² + v.y² + v.z²)
@@ -102,7 +101,7 @@ inline double magnitude(const Vector3D& v) {
 }
 
 /**
- * @brief Compute the Euclidean distance between two position vectors
+ * @brief Computes the Euclidean distance between two position vectors
  *
  * @param v1 First vector
  * @param v2 Second vector

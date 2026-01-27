@@ -6,7 +6,15 @@
 namespace simple_slice::geometry {
 
 /**
- * @brief A 3D point in Cartesian coordinates
+ * @brief Lightweight 3D point in Cartesian coordinates
+ *
+ * Represents a position in 3D space with (x, y, z) coordinates.
+ * This type is intentionally minimal and is used as a simple value object
+ * for geometry algorithms and higher-level APIs.
+ *
+ * @note Arithmetic operators are component-wise and treat the point as a
+ *       coordinate container. For vector algebra (dot, cross, etc.), use
+ *       `Vector3D` from `geometry/vector.hpp`.
  */
 class Point {
 public:
@@ -66,9 +74,7 @@ private:
 };
 
 /**
- * @brief Stream insertion operator for Point.
- *
- * Formats and prints a point as `(x, y, z)`.
+ * @brief Stream insertion operator for Point - formats and prints a point as `(x, y, z)`
  *
  * @param os Output stream
  * @param point Point to print

@@ -21,15 +21,12 @@ constexpr double kEpsilon{1e-9};
  * @return +1 if value > tolerance, -1 if value < -tolerance, 0 if |value| ≤ tolerance
  */
 inline int sign(double value, double tolerance = kEpsilon) {
-    // Positive value -> return 1
     if (value > tolerance) {
         return 1;
     }
-    // Negative value -> return -1
     if (value < -tolerance) {
         return -1;
     }
-    // Zero value -> return 0
     return 0;
 }
 
