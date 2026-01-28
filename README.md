@@ -8,6 +8,7 @@ This repository is currently a sandbox for developing a slicing library for 3D g
 
 - Add more computational geometry logic in src/geometry/
 - Add slicing logic in src/slicer/
+- First proof of concept would be to generate a toolpath for a rectangular shape with a single layer.
 
 ## Build
 
