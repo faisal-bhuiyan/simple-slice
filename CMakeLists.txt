@@ -29,6 +29,12 @@ add_executable(air_hockey_game
 target_link_libraries(air_hockey_game PRIVATE simpleslice_geometry)
 target_include_directories(air_hockey_game PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+add_executable(slicer2d_main
+    src/apps/slicer2d_main.cpp
+)
+target_link_libraries(slicer2d_main PRIVATE simpleslice_geometry)
+target_include_directories(slicer2d_main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 # Tests
 include(CTest)
 if(BUILD_TESTING)
