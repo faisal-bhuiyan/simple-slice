@@ -32,9 +32,12 @@ Edit the parameters in `src/apps/slicer2d_main.cpp`:
 
 ## Output preview
 
-Add your toolpath images here:
+### Rectangle
 
-- Rectangle: `images/rectangle_toolpath.png`
-- Circle: `images/circle_toolpath.png`
+![Rectangle toolpath](images/rectangle_toolpath.png)
+
+### Circle
+
+![Circle toolpath](images/circle_toolpath.png)
 
 
