@@ -148,58 +148,58 @@ TEST_F(ProjectionsTest, ProjectPointOnSegmentDegenerateCase) {
 }
 
 //----------------------------------------------
-// orient2D() tests
+// signed_area_2D() tests
 //----------------------------------------------
 
-TEST_F(ProjectionsTest, Orient2DCounterclockwise) {
+TEST_F(ProjectionsTest, signed_area_2DCounterclockwise) {
     Point a{0., 0., 0.};
     Point b{1., 0., 0.};
     Point c{0.5, 1., 0.};
 
-    double result = orient2D(a, b, c);
+    double result = signed_area_2D(a, b, c);
 
     EXPECT_GT(result, 0.);
 }
 
-TEST_F(ProjectionsTest, Orient2DClockwise) {
+TEST_F(ProjectionsTest, signed_area_2DClockwise) {
     Point a{0., 0., 0.};
     Point b{1., 0., 0.};
     Point c{0.5, -1., 0.};
 
-    double result = orient2D(a, b, c);
+    double result = signed_area_2D(a, b, c);
 
     EXPECT_LT(result, 0.);
 }
 
-TEST_F(ProjectionsTest, Orient2DCollinear) {
+TEST_F(ProjectionsTest, signed_area_2DCollinear) {
     Point a{0., 0., 0.};
     Point b{1., 1., 0.};
     Point c{2., 2., 0.};
 
-    double result = orient2D(a, b, c);
+    double result = signed_area_2D(a, b, c);
 
     EXPECT_NEAR(result, 0., kTestEpsilon);
 }
 
-TEST_F(ProjectionsTest, Orient2DRightTriangle) {
+TEST_F(ProjectionsTest, signed_area_2DRightTriangle) {
     Point a{0., 0., 0.};
     Point b{3., 0., 0.};
     Point c{3., 4., 0.};
 
-    double result = orient2D(a, b, c);
+    double result = signed_area_2D(a, b, c);
 
     EXPECT_NEAR(result, 12., kTestEpsilon);
 }
 
 //----------------------------------------------
-// AxisAlignedBoundingBox2D tests
+// AxisAlignedBoundingBox tests
 //----------------------------------------------
 
 TEST_F(ProjectionsTest, AABBConstructionHorizontal) {
     Point a{1., 2., 0.};
     Point b{3., 2., 0.};
 
-    auto box = axis_aligned_bounding_box_2d(a, b);
+    auto box = axis_aligned_bounding_box(a, b);
 
     EXPECT_NEAR(box.min_x, 1. - kEpsilon, kTestEpsilon);
     EXPECT_NEAR(box.max_x, 3. + kEpsilon, kTestEpsilon);
@@ -211,7 +211,7 @@ TEST_F(ProjectionsTest, AABBConstructionVertical) {
     Point a{2., 1., 0.};
     Point b{2., 3., 0.};
 
-    auto box = axis_aligned_bounding_box_2d(a, b);
+    auto box = axis_aligned_bounding_box(a, b);
 
     EXPECT_NEAR(box.min_x, 2. - kEpsilon, kTestEpsilon);
     EXPECT_NEAR(box.max_x, 2. + kEpsilon, kTestEpsilon);
@@ -223,7 +223,7 @@ TEST_F(ProjectionsTest, AABBConstructionDiagonal) {
     Point a{1., 1., 0.};
     Point b{3., 4., 0.};
 
-    auto box = axis_aligned_bounding_box_2d(a, b);
+    auto box = axis_aligned_bounding_box(a, b);
 
     EXPECT_NEAR(box.min_x, 1. - kEpsilon, kTestEpsilon);
     EXPECT_NEAR(box.max_x, 3. + kEpsilon, kTestEpsilon);
@@ -236,7 +236,7 @@ TEST_F(ProjectionsTest, AABBConstructionCustomPadding) {
     Point b{3., 3., 0.};
     double pad = 0.5;
 
-    auto box = axis_aligned_bounding_box_2d(a, b, pad);
+    auto box = axis_aligned_bounding_box(a, b, pad);
 
     EXPECT_NEAR(box.min_x, 0.5, kTestEpsilon);
     EXPECT_NEAR(box.max_x, 3.5, kTestEpsilon);
@@ -248,8 +248,8 @@ TEST_F(ProjectionsTest, AABBOrderIndependent) {
     Point a{1., 1., 0.};
     Point b{3., 3., 0.};
 
-    auto box1 = axis_aligned_bounding_box_2d(a, b);
-    auto box2 = axis_aligned_bounding_box_2d(b, a);
+    auto box1 = axis_aligned_bounding_box(a, b);
+    auto box2 = axis_aligned_bounding_box(b, a);
 
     EXPECT_NEAR(box1.min_x, box2.min_x, kTestEpsilon);
     EXPECT_NEAR(box1.max_x, box2.max_x, kTestEpsilon);
@@ -258,45 +258,45 @@ TEST_F(ProjectionsTest, AABBOrderIndependent) {
 }
 
 //----------------------------------------------
-// contains_point_2d() tests
+// contains_point_3d() tests
 //----------------------------------------------
 
 TEST_F(ProjectionsTest, ContainsPointInside) {
-    AxisAlignedBoundingBox2D box{0., 0., 2., 2.};
+    AxisAlignedBoundingBox box{0., 0., 0., 2., 2., 0.};
     Point point{1., 1., 0.};
 
-    EXPECT_TRUE(contains_point_2d(box, point));
+    EXPECT_TRUE(contains_point_3d(box, point));
 }
 
 TEST_F(ProjectionsTest, ContainsPointOnBoundary) {
-    AxisAlignedBoundingBox2D box{0., 0., 2., 2.};
+    AxisAlignedBoundingBox box{0., 0., 0., 2., 2., 0.};
 
-    EXPECT_TRUE(contains_point_2d(box, Point{0., 1., 0.}));
-    EXPECT_TRUE(contains_point_2d(box, Point{2., 1., 0.}));
-    EXPECT_TRUE(contains_point_2d(box, Point{1., 0., 0.}));
-    EXPECT_TRUE(contains_point_2d(box, Point{1., 2., 0.}));
+    EXPECT_TRUE(contains_point_3d(box, Point{0., 1., 0.}));
+    EXPECT_TRUE(contains_point_3d(box, Point{2., 1., 0.}));
+    EXPECT_TRUE(contains_point_3d(box, Point{1., 0., 0.}));
+    EXPECT_TRUE(contains_point_3d(box, Point{1., 2., 0.}));
 }
 
 TEST_F(ProjectionsTest, ContainsPointAtCorners) {
-    AxisAlignedBoundingBox2D box{0., 0., 2., 2.};
+    AxisAlignedBoundingBox box{0., 0., 0., 2., 2., 0.};
 
-    EXPECT_TRUE(contains_point_2d(box, Point{0., 0., 0.}));
-    EXPECT_TRUE(contains_point_2d(box, Point{2., 0., 0.}));
-    EXPECT_TRUE(contains_point_2d(box, Point{0., 2., 0.}));
-    EXPECT_TRUE(contains_point_2d(box, Point{2., 2., 0.}));
+    EXPECT_TRUE(contains_point_3d(box, Point{0., 0., 0.}));
+    EXPECT_TRUE(contains_point_3d(box, Point{2., 0., 0.}));
+    EXPECT_TRUE(contains_point_3d(box, Point{0., 2., 0.}));
+    EXPECT_TRUE(contains_point_3d(box, Point{2., 2., 0.}));
 }
 
 TEST_F(ProjectionsTest, ContainsPointOutside) {
-    AxisAlignedBoundingBox2D box{0., 0., 2., 2.};
+    AxisAlignedBoundingBox box{0., 0., 0., 2., 2., 0.};
 
-    EXPECT_FALSE(contains_point_2d(box, Point{-0.1, 1., 0.}));
-    EXPECT_FALSE(contains_point_2d(box, Point{2.1, 1., 0.}));
-    EXPECT_FALSE(contains_point_2d(box, Point{1., -0.1, 0.}));
-    EXPECT_FALSE(contains_point_2d(box, Point{1., 2.1, 0.}));
+    EXPECT_FALSE(contains_point_3d(box, Point{-0.1, 1., 0.}));
+    EXPECT_FALSE(contains_point_3d(box, Point{2.1, 1., 0.}));
+    EXPECT_FALSE(contains_point_3d(box, Point{1., -0.1, 0.}));
+    EXPECT_FALSE(contains_point_3d(box, Point{1., 2.1, 0.}));
 }
 
 //----------------------------------------------
-// on_line_segment_2d() tests
+// on_line_segment_3d() tests
 //----------------------------------------------
 
 TEST_F(ProjectionsTest, OnSegmentAtStart) {
@@ -304,7 +304,7 @@ TEST_F(ProjectionsTest, OnSegmentAtStart) {
     Point b{2., 0., 0.};
     Point p{0., 0., 0.};
 
-    EXPECT_TRUE(on_line_segment_2d(a, b, p));
+    EXPECT_TRUE(on_line_segment_3d(a, b, p));
 }
 
 TEST_F(ProjectionsTest, OnSegmentAtEnd) {
@@ -312,7 +312,7 @@ TEST_F(ProjectionsTest, OnSegmentAtEnd) {
     Point b{2., 0., 0.};
     Point p{2., 0., 0.};
 
-    EXPECT_TRUE(on_line_segment_2d(a, b, p));
+    EXPECT_TRUE(on_line_segment_3d(a, b, p));
 }
 
 TEST_F(ProjectionsTest, OnSegmentInMiddle) {
@@ -320,7 +320,7 @@ TEST_F(ProjectionsTest, OnSegmentInMiddle) {
     Point b{2., 0., 0.};
     Point p{1., 0., 0.};
 
-    EXPECT_TRUE(on_line_segment_2d(a, b, p));
+    EXPECT_TRUE(on_line_segment_3d(a, b, p));
 }
 
 TEST_F(ProjectionsTest, OnSegmentNotCollinear) {
@@ -328,7 +328,7 @@ TEST_F(ProjectionsTest, OnSegmentNotCollinear) {
     Point b{2., 0., 0.};
     Point p{1., 1., 0.};
 
-    EXPECT_FALSE(on_line_segment_2d(a, b, p));
+    EXPECT_FALSE(on_line_segment_3d(a, b, p));
 }
 
 TEST_F(ProjectionsTest, OnSegmentCollinearButBeyond) {
@@ -336,7 +336,7 @@ TEST_F(ProjectionsTest, OnSegmentCollinearButBeyond) {
     Point b{2., 0., 0.};
     Point p{3., 0., 0.};
 
-    EXPECT_FALSE(on_line_segment_2d(a, b, p));
+    EXPECT_FALSE(on_line_segment_3d(a, b, p));
 }
 
 TEST_F(ProjectionsTest, OnSegmentDiagonal) {
@@ -344,7 +344,7 @@ TEST_F(ProjectionsTest, OnSegmentDiagonal) {
     Point b{2., 2., 0.};
     Point p{1., 1., 0.};
 
-    EXPECT_TRUE(on_line_segment_2d(a, b, p));
+    EXPECT_TRUE(on_line_segment_3d(a, b, p));
 }
 
 //----------------------------------------------
