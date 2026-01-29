@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "geometry/utilities.hpp"
+#include "slicer/perimeters.hpp"
 #include "slicer/shapes.hpp"
 
 namespace simple_slice::slicer {
@@ -208,10 +209,11 @@ inline std::vector<Path> stitch_segments_into_paths(
 }
 
 /**
- * @brief Slice a triangle mesh into horizontal layers
+ * @brief Slice a triangle mesh into horizontal layers and optionally generate perimeters
  *
  * Goal: slice a triangle mesh into horizontal layers at fixed Z intervals
- * and return 2D polylines per layer.
+ * and return 2D polylines per layer. Optionally generate inward-offset perimeters
+ * for each contour.
  *
  * Algorithm:
  *  1. Early returns: if mesh is empty or layer_height <= 0, return empty layers.
@@ -223,20 +225,24 @@ inline std::vector<Path> stitch_segments_into_paths(
  *     - Compute Z height: z = min_z + i * layer_height
  *     - Intersect all triangles with plane Z = z to get segments
  *     - Stitch segments into polylines using stitch_segments_into_paths
+ *     - If spacing > 0, generate perimeters for all paths in the layer
  *     - Store the layer as {z, paths}
  *
  * Result: a vector of Layer objects, one per Z slice, each containing
- * the 2D polylines for that height.
+ * the 2D polylines for that height (outer contours if spacing <= 0, or
+ * perimeters if spacing > 0).
  *
  * This is the main entry point for mesh slicing: it orchestrates triangle-plane
  * intersection and segment stitching to produce layered toolpaths.
  *
  * @param triangles Triangle mesh to slice
  * @param layer_height Layer height (must be positive)
+ * @param spacing Optional perimeter spacing (if > 0, generates perimeters; if <= 0, returns outer
+ * contours only)
  * @return Layered paths for each Z slice
  */
 inline std::vector<Layer> slice_triangle_mesh_layers(
-    const std::vector<Triangle>& triangles, double layer_height
+    const std::vector<Triangle>& triangles, double layer_height, double spacing = 0.
 ) {
     std::vector<Layer> layers{};
     if (triangles.empty() || layer_height <= 0.) {
@@ -279,10 +285,17 @@ inline std::vector<Layer> slice_triangle_mesh_layers(
         }
 
         // Store the layer as {z, polylines}
-        layers.emplace_back(
+        Layer layer{
             z,
             stitch_segments_into_paths(std::move(segments), simple_slice::geometry::kEpsilon * 10.)
-        );
+        };
+
+        // Generate perimeters if spacing is positive
+        if (spacing > 0.) {
+            layer = generate_layer_perimeters(layer, spacing);
+        }
+
+        layers.push_back(std::move(layer));
     }
     return layers;
 }

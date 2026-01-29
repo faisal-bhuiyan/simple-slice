@@ -18,8 +18,8 @@ int main(int argc, char** argv) {
     // Edit the values below to change the output geometry
     //----------------------------------------------------
 
-    constexpr double layer_height_mm{0.2};  // layer height (mm)
-    constexpr double spacing_mm{2.};        // perimeter spacing (mm)
+    constexpr double layer_height_mm{0.50};  // layer height (mm)
+    constexpr double spacing_mm{0.1};        // perimeter spacing (mm)
     const std::string default_stl_path{"src/apps/cube_sample.stl"};
 
     if (layer_height_mm <= 0.) {
@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
     // Slice mesh and output G-code
     //----------------------------------------------------
 
-    const auto layers = slice_triangle_mesh_layers(triangles, layer_height_mm);
+    const auto layers = slice_triangle_mesh_layers(triangles, layer_height_mm, spacing_mm);
 
     const std::string output_filename{"slicer_mesh.gcode"};
     std::ofstream gcode_out(output_filename);
