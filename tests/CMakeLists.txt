@@ -15,7 +15,11 @@ add_executable(unit_tests
     geometry/test_utilities.cpp
     geometry/test_projections.cpp
     air_hockey_game/test_air_hockey_game.cpp
-    slicer/test_slicer.cpp
+    slicer/test_shapes.cpp
+    slicer/test_perimeters.cpp
+    slicer/test_toolpath.cpp
+    slicer/test_stl_reader.cpp
+    slicer/test_mesh_slicer.cpp
 )
 
 target_link_libraries(unit_tests PRIVATE
