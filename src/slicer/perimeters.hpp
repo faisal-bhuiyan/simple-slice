@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <cmath>
+#include <limits>
 #include <numbers>
 #include <vector>
 
@@ -99,6 +101,66 @@ inline std::vector<Path> generate_circle_perimeters(
     }
 
     return paths;
+}
+
+//----------------------------------------------------
+// Layer perimeter generation
+//----------------------------------------------------
+
+/**
+ * @brief Compute 2D bounding box from all paths in a layer
+ *
+ * Finds the axis-aligned bounding rectangle that contains all points
+ * from all paths in the layer (XY plane only).
+ *
+ * @param layer Layer containing paths
+ * @return Rectangle bounding box (min_x, min_y, max_x, max_y)
+ */
+inline Rectangle compute_layer_bounding_box(const Layer& layer) {
+    if (layer.paths.empty()) {
+        return Rectangle{0., 0., 0., 0.};
+    }
+
+    double min_x = std::numeric_limits<double>::max();
+    double min_y = std::numeric_limits<double>::max();
+    double max_x = std::numeric_limits<double>::lowest();
+    double max_y = std::numeric_limits<double>::lowest();
+
+    for (const auto& path : layer.paths) {
+        for (const auto& point : path) {
+            min_x = std::min(min_x, point.GetX());
+            min_y = std::min(min_y, point.GetY());
+            max_x = std::max(max_x, point.GetX());
+            max_y = std::max(max_y, point.GetY());
+        }
+    }
+
+    // Handle degenerate case where all points are the same
+    if (min_x > max_x || min_y > max_y) {
+        return Rectangle{0., 0., 0., 0.};
+    }
+
+    return Rectangle{min_x, min_y, max_x, max_y};
+}
+
+/**
+ * @brief Generate perimeters for all paths in a layer
+ *
+ * Computes the bounding box of all paths in the layer and generates
+ * rectangle perimeters from that bounding box.
+ *
+ * @param layer Input layer with outer contours
+ * @param spacing Inward offset spacing
+ * @return New layer with perimeter paths
+ */
+inline Layer generate_layer_perimeters(const Layer& layer, double spacing) {
+    // Compute bounding box from all paths in the layer
+    const Rectangle bbox = compute_layer_bounding_box(layer);
+
+    // Generate rectangle perimeters
+    const auto perimeter_paths = generate_rectangle_perimeters(bbox, spacing);
+
+    return Layer{layer.z, perimeter_paths};
 }
 
 }  // namespace simple_slice::slicer

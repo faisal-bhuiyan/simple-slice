@@ -35,6 +35,12 @@ add_executable(slicer2d_main
 target_link_libraries(slicer2d_main PRIVATE simpleslice_geometry)
 target_include_directories(slicer2d_main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+add_executable(slicer_main
+    src/apps/slicer_main.cpp
+)
+target_link_libraries(slicer_main PRIVATE simpleslice_geometry)
+target_include_directories(slicer_main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 # Tests
 include(CTest)
 if(BUILD_TESTING)
