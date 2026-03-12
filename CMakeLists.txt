@@ -13,6 +13,17 @@ target_include_directories(simpleslice_geometry INTERFACE
 )
 add_library(simple_slice::geometry ALIAS simpleslice_geometry)
 
+# Mesh library
+add_library(mesh
+    src/mesh/stl_io.cpp
+    src/mesh/triangle_mesh.cpp
+    src/mesh/reorient_triangles.cpp
+    src/mesh/void_detection.cpp
+)
+target_include_directories(mesh PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_compile_options(mesh PRIVATE ${PROJECT_WARNINGS})
+add_library(simple_slice::mesh ALIAS mesh)
+
 # Polyline library
 add_library(polyline src/polyline/polyline.cpp)
 target_include_directories(polyline PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
