@@ -13,6 +13,12 @@ target_include_directories(simpleslice_geometry INTERFACE
 )
 add_library(simple_slice::geometry ALIAS simpleslice_geometry)
 
+# Polyline library
+add_library(polyline src/polyline/polyline.cpp)
+target_include_directories(polyline PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_compile_options(polyline PRIVATE ${PROJECT_WARNINGS})
+add_library(simple_slice::polyline ALIAS polyline)
+
 # Air hockey game library target
 add_library(air_hockey_game_lib
     src/air_hockey_game/air_hockey_game.cpp

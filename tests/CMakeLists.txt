@@ -14,6 +14,7 @@ add_executable(unit_tests
     geometry/test_vector.cpp
     geometry/test_utilities.cpp
     geometry/test_projections.cpp
+    polyline/test_polyline.cpp
     air_hockey_game/test_air_hockey_game.cpp
     slicer/test_shapes.cpp
     slicer/test_perimeters.cpp
@@ -24,6 +25,7 @@ add_executable(unit_tests
 
 target_link_libraries(unit_tests PRIVATE
     simple_slice::geometry
+    simple_slice::polyline
     air_hockey_game_lib
     GTest::gtest_main
 )
